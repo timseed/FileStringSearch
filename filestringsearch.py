@@ -1,7 +1,4 @@
-import logging
 import logging.config
-import yaml
-
 
 class filestringsearch(object):
 
@@ -22,12 +19,21 @@ class filestringsearch(object):
                         self.results.append(line)
 
     def dump(self):
+        self.logger.debug("In Dump")
         for i in self.results:
             print('{}'.format(i.strip()))
 
 if __name__=="__main__":
     import logging.config
     import logging
+    import argparse
+    import yaml
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-m',  type=str, dest = 'mainfile',help = 'Main Data file to search')
+    parser.add_argument('-k',  type=str, dest = 'keyfile', help='Key file (One per line)')
+    args = parser.parse_args()
+
 
     with open('logging.yaml', 'rt') as f:
         config = yaml.safe_load(f.read())
@@ -35,9 +41,8 @@ if __name__=="__main__":
     logging.config.dictConfig(config)
     logger = logging.getLogger(__name__)
     logger.info("FileSearch is starting")
-    fss = filestringsearch("/Users/tim/Dev/SecLists/Passwords/alleged-gmail-passwords.txt", "keys.txt")
+    fss = filestringsearch(args.mainfile,args.keyfile)
     fss.dump()
     logger.info("FileSearch finished")
-
 
 
